@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 import { Container, makeStyles, Button, TextField, Typography } from '@material-ui/core';
 import history from '../src/history';
 
@@ -89,6 +90,7 @@ const useStyles = makeStyles(() => ({
 
 export let DeleteUser = () => {
     const classes = useStyles();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [id, setId] = React.useState('');
 
     let deleteUser = () => {
@@ -96,7 +98,17 @@ export let DeleteUser = () => {
             id: id
         })
         .then(res => {
-            history.push('/');
+            if (!res.data.error) {
+                history.push('/');
+            } else {
+                let message = `${res.data.error.errorCode}: ${res.data.error.errorMessage}`
+                enqueueSnackbar(message, {
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                });
+            };
         })
         .catch(err => {
             console.log(err);
