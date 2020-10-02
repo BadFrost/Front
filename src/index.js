@@ -8,7 +8,7 @@ import history from "./history";
 ReactDOM.render(
     <Router history={history}>
         <SnackbarProvider 
-            maxSnack={3}
+            maxSnack={6}
             anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',

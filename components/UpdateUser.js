@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 import { Container, makeStyles, Button, TextField, Typography } from '@material-ui/core';
 import history from '../src/history';
 
@@ -124,6 +125,7 @@ const useStyles = makeStyles(() => ({
 
 export let UpdateUser = () => {
     const classes = useStyles();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [id, setID] = React.useState('');
     const [name, setName] = React.useState('');
     const [surname, setSurname] = React.useState('');
@@ -141,7 +143,32 @@ export let UpdateUser = () => {
             email: email
         })
         .then(res => {
-            history.push('/');
+            if (!res.data.errors) {
+                if (!res.data.error) {
+                    history.push('/');
+                } else {
+                    let message = `${res.data.error.errorCode}: ${res.data.error.errorMessage}`
+                    enqueueSnackbar(message, {
+                        variant: 'error',
+                        anchorOrigin: {
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        },
+                    });
+                };
+            } else {
+                for (let i = 0; i < res.data.errors.length; i++) {
+                    console.log(res.data.errors[i])
+                    let message = `${res.data.errors[i].msg.errorCode}: ${res.data.errors[i].msg.errorMessage}`
+                    enqueueSnackbar(message, {
+                        variant: 'error',
+                        anchorOrigin: {
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        },
+                    });
+                }
+            };
         })
         .catch(err => {
             console.log(err);

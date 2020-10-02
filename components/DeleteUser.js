@@ -103,6 +103,7 @@ export let DeleteUser = () => {
             } else {
                 let message = `${res.data.error.errorCode}: ${res.data.error.errorMessage}`
                 enqueueSnackbar(message, {
+                    variant: 'error',
                     anchorOrigin: {
                         vertical: 'bottom',
                         horizontal: 'right',
